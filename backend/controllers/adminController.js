@@ -16,7 +16,7 @@ const addDoctor = async (req,res) => {
         console.log(" Image file:", imageFile);
 
 
-        //checking for all daata to add doctor
+        //checking for all data to add doctor
         if(!name || !email  || !password || !speciality || !degree || !experience || !about || !fees || !address){
             return res.json({success:false,message:"Missing Details"})
         }
