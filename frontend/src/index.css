@@ -1,1 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Piazzolla:ital,opsz,wght@0,8..30,100..900;1,8..30,100..900&display=swap');
 @import "tailwindcss";
+
+:root {
+  --primary-color: #596ce7;
+}
+
+* {
+  font-family: Outfit;
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.active hr {
+  display: block;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.grid-cols-auto {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.hover-bg-primary:hover {
+  background-color: var(--primary-color);
+}
+
+@media (max-width: 740px) {
+  .active p {
+    color: white;
+    background-color: var(--primary-color);
+  }
+}
+
