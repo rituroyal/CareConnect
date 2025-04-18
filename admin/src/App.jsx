@@ -10,6 +10,7 @@ import { Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Admin/Dashboard';
 import AllAppointments from './pages/Admin/AllAppointments';
 import AddDoctor from './pages/Admin/AddDoctor';
+import Home from '../../frontend/src/Pages/Home';
 
 
 
@@ -23,7 +24,7 @@ const App = () => {
       <div className='flex items-start'>
         <Sidebar/>
         <Routes>
-          <Route path='/' element={<> </>} />
+          <Route path='/' element={<Home/> } />
           <Route path='/admin-dashboard' element={<Dashboard/>} />
           <Route path='/all-appointments' element={<AllAppointments/>} />
           <Route path='/add-doctor' element={<AddDoctor/>} />
