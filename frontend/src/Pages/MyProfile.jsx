@@ -1,4 +1,4 @@
-import React, { useState ,useContext} from 'react'
+import React, { useState ,useContext, useEffect} from 'react'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/images/assets'
 import axios from 'axios'
@@ -19,10 +19,27 @@ const MyProfile = () => {
 
     //   })
     
+
+    
     const {userData,setUserData, token, backendUrl, loadUserProfileData} = useContext(AppContext)
 
     const [isEdit, setIsEdit] = useState(true)
     const [image, setImage] = useState(false)
+
+    console.log(" Rendering MyProfile");
+  console.log(" userData:", userData);
+  console.log(" token:", token);
+  console.log(" backendUrl:", backendUrl);
+
+    useEffect(() => {
+      if (!userData) {
+        console.log("📥 userData not found, loading user profile...");
+        loadUserProfileData();
+      } else {
+        console.log("✅ userData already loaded.");
+      }
+    }, [userData]);
+
     const updateUserProfileData = async () => {
         try {
             const formData = new FormData() 
@@ -62,7 +79,7 @@ const MyProfile = () => {
                       </div>
                       <input onChange={(e)=>setImage(e.target.files[0])} type="file" id="image" hidden/>
                   </label>
-                  : <img className='w-36 rounded' src={userData.image} alt="" />
+                  : <img className='w-36 rounded' src={userData.imag || assets.profile_pic} alt="" />
           }
 
       <img className='w-36 rounded' src={userData.image} alt="" />
