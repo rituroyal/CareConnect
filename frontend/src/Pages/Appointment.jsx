@@ -4,14 +4,17 @@ import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/images/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
 import axios from 'axios'
+import { toast } from 'react-toastify';
+
 
 const Appointment = () => {
   const { docId } = useParams()
-  const { doctors ,currencySymbol,backendUrl,token,getDoctorsData} = useContext(AppContext)
+  const { userData,doctors ,currencySymbol,backendUrl,token,getDoctorsData} = useContext(AppContext)
   const daysOfWeek =['SUN','MON','TUE','WED','THU','FRI','SAT']
 
   const navigate =useNavigate()
 
+  //const { userData } = useContext(AppContext);
   const [docInfo, setDocInfo] = useState(null)
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
@@ -22,6 +25,7 @@ const Appointment = () => {
   }
 
   const getAvailableSlots = async () => {
+    if (!docInfo || !docInfo.slots_booked) return;
     setDocSlots([])
 
     // getting current date
@@ -94,6 +98,10 @@ const Appointment = () => {
       toast.warn('Login to book appointment')
       return navigate('/login')
     }
+    if (!userData || !userData._id) {
+      toast.error('User not found. Please login again.');
+      return navigate('/login');
+    }
 
     try{
 
@@ -104,7 +112,7 @@ const Appointment = () => {
       let year=date.getFullYear()
 
       const slotDate=day+"_"+month+"_"+year
-      const{data}=await axios.post(backendUrl+'/api/user/book-appointment',{docId,slotDate,slotTime},{headers:token})
+      const{data}=await axios.post(backendUrl+'/api/user/book-appointment',{userId: userData._id,userData,docId,slotDate,slotTime},{headers:{ Authorization: `Bearer ${token}` }})
       if(data.success){
         toast.success(data.message)
         getDoctorsData()

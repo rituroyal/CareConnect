@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.svg'; // Adjust the path to the actual file
-// import profile_pic from '../assets/images/profile_pic.png';  // Change path accordingly
+import profile_pic from '../assets/images/profile_pic.png';  // Change path accordingly
 import dropdown_icon from '../assets/images/dropdown_icon.svg';  // Change path accordingly
 import { assets } from '../assets/images/assets';
 import { AppContext } from '../context/AppContext';
@@ -57,11 +57,13 @@ const Navbar = () => {
                         ?
                         <div className='flex items-center gap-2 cursor-pointer group relative'>
                           
-                    <img className='w-8 rounded-full' src={userData.image || assets.profile_pic} alt="Profile" />
+                    <img className='w-8 rounded-full' src={userData?.image || assets.profile_pic} alt="Profile" />
                     <img className='w-2.5' src={dropdown_icon} alt="Dropdown" />
                 <div className='absolute top-0 right-0 pt-15 text-base font-medium text-gray-600 z-20 hidden group-hover:block'>
                   <div className='min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4'>
-                    <p onClick={() =>navigate('/my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
+                    <p onClick={() =>{
+                      console.log("Navigating to My Profile");
+                      navigate('/my-profile')}} className='hover:text-black cursor-pointer'>My Profile</p>
                     
 
                     <p onClick={() =>navigate('/my-appointments')} className='hover:text-black cursor-pointer'>My Appointments</p>

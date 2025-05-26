@@ -1,4 +1,6 @@
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route } from 'react-router-dom'; // Import Routes and Route
 import Home from './Pages/Home';
 import Doctor from './Pages/Doctor'
@@ -14,7 +16,9 @@ import Footer from './components/Footer';
 
 const App = () => {
   return (
+    
     <div className='mx-4 sm:mx-[10%]'>
+       <ToastContainer position="top-right" autoClose={3000} />
       <Navbar />
       <Routes>
         <Route path='/' element={<Home/>}/>
