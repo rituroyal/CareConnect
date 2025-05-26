@@ -5,6 +5,7 @@ import appointmentModel from '../models/AppointmentModel.js'
 import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
+import razorpay from 'razorpay'
 //import razorpay from 'razorpay'
 // API to register user
 
@@ -327,5 +328,59 @@ const bookAppointment = async (req, res) => {
 
 //}
 
-    export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment,listAppointment,cancelAppointment
+const razorpayInstance = new razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+})
+//Api to make payment of appointment using razor pay
+const paymentRazorpay = async (req, res) => {
+    try {
+        const { appointmentId } = req.body
+    const appointmentData = await appointmentModel.findById(appointmentId)
+    if (!appointmentData || appointmentData.cancelled) {
+        return res.json({ success: false, message: "Appointment cancelled or not found" })
+    }
+
+    //creating options for razor pay payment
+    const options = {
+        amount: appointmentData.amount * 100, // amount in smallest currency unit
+        currency: process.env.CURRENCY,
+        receipt: appointmentId,
+    }
+
+    //creation of order
+    const order = await razorpayInstance.orders.create(options)
+
+    res.json({ success: true, order }) 
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+//API to verify payment of appointment using razorpay
+
+const verifyRazorpay = async (req, res) => {
+    try {
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body
+        const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
+        console.log(orderInfo)
+        if(orderInfo.status === 'paid') {
+            // Payment is successful, you can proceed with your logic
+            await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
+                payment:true
+            })
+            res.json({ success: true, message: "Payment successful" })  
+        }   else {
+            return res.json({ success: false, message: "Payment not successful" })
         }
+        // Here you would typically verify the payment signature with Razorpay's API
+        // For simplicity, we are just returning the payment details
+        // res.json({ success: true, message: "Payment verified", paymentDetails: { razorpay_payment_id, razorpay_order_id, razorpay_signature } })
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment,listAppointment,cancelAppointment, paymentRazorpay,verifyRazorpay }
