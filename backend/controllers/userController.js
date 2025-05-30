@@ -90,63 +90,14 @@ const getProfile = async (req, res) => {
 }
 
 // API to update user profile
-
-// const updateProfile = async (req, res) => {
-//     try {
-//         const { userId, name, phone, address, dob, gender } = req.body
-//         const imageFile = req.file
-
-//         if (!name || !phone || !dob || !gender) {
-//             return res.json({ success: false, message: "Data Missing" })
-//         }
-//         //     await userModel.findByIdAndUpdate(userId, { name, phone, address: JSON.parse(address), dob, gender })
-//         //     if (imageFile) {
-
-//         //         // upload image to cloudinary
-//         //         const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' })
-//         //         const imageURL = imageUpload.secure_url
-
-//         //         await userModel.findByIdAndUpdate(userId,{image:imageURL})
-//         //     }
-//         //     res.json({success:true,message:"Profile Updated"})
-//         // }
-//         // catch(error) {
-//         //     console.log(error)
-//         //   res.json({success:false,message:error.message})
-//         // }
-//         const updatedUser = await userModel.findByIdAndUpdate(
-//             userId,
-//             {
-//                 name,
-//                 phone,
-//                 address: JSON.parse(address),
-//                 dob,
-//                 gender
-//             },
-//             { new: true } // return the updated document
-//         )
-
-//         if (!updatedUser) {
-//             return res.json({ success: false, message: "User not found or update failed" })
-//         }
-
-//         if (imageFile) {
-//             const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' })
-//             const imageURL = imageUpload.secure_url
-
-//             await userModel.findByIdAndUpdate(userId, { image: imageURL })
-//         }
-
-//         res.json({ success: true, message: "Profile Updated", updatedUser })
-//     }
-// }
-
 const updateProfile = async (req, res) => {
     try {
-        const { userId, name, phone, address, dob, gender } = req.body
+        const { name,email, phone, address, dob, gender } = req.body
         const imageFile = req.file
 
-        if (!name || !phone || !dob || !gender || !address) {
+        const userId = req.user.userId
+
+        if (!name || !phone || !email || !dob || !gender || !address) {
             return res.json({ success: false, message: "Data Missing" })
         }
 
@@ -154,6 +105,7 @@ const updateProfile = async (req, res) => {
         const updateData = {
             name,
             phone,
+            email,
             address: JSON.parse(address),
             dob,
             gender
