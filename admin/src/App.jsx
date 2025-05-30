@@ -15,6 +15,7 @@ import Home from '../../frontend/src/Pages/Home';
 import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorAppointment from './pages/Doctor/DoctorAppointment';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
+import { Navigate } from 'react-router-dom';
 
 
 
@@ -30,7 +31,7 @@ const App = () => {
         <Sidebar/>
         <Routes>
           {/* Admin Route */}
-          <Route path='/' element={<Home/> } />
+          {/* <Route path='/' element={<Home/> } /> */}
           <Route path='/admin-dashboard' element={<Dashboard/>} />
           <Route path='/all-appointments' element={<AllAppointments/>} />
           <Route path='/add-doctor' element={<AddDoctor/>} />
@@ -40,6 +41,18 @@ const App = () => {
           <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
           <Route path='/doctor-appointments' element={<DoctorAppointment />} />
           <Route path='/doctor-profile' element={<DoctorProfile />} />
+
+          {/* Default redirect */}
+  <Route path='/' element={
+    aToken ? <Navigate to="/admin-dashboard" /> :
+    dToken ? <Navigate to="/doctor-dashboard" /> :
+    <Login />
+  } />
+  <Route path='*' element={
+    aToken ? <Navigate to="/admin-dashboard" /> :
+    dToken ? <Navigate to="/doctor-dashboard" /> :
+    <Login />
+  } />
         </Routes>
       </div>
     </div>
