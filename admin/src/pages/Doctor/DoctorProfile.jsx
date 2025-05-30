@@ -1,13 +1,47 @@
 import { useContext, useEffect, useState } from 'react'
 import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const DoctorProfile = () => {
 
-  const { dToken, profileData, setProfileData, getProfileData } = useContext(DoctorContext)
+  const { dToken, profileData, setProfileData, getProfileData, backendUrl  } = useContext(DoctorContext)
   const { currency } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
+
+  // API call to get the doctor profile data
+
+  const updateProfileData = async () => {
+    try {
+      const updateData = {
+        address: profileData.address,
+        fees: profileData.fees,
+        available: profileData.available,
+      }
+
+    const { data } = await axios.post(backendUrl + '/api/doctor/update-profile', updateData, {
+      headers: {
+        'Authorization': `Bearer ${dToken}`
+      }
+    });
+
+    if (data.success) {
+      toast.success(data.message);
+      setIsEdit(false);
+      getProfileData();
+      }
+    else {
+      toast.error(data.message);
+      }
+    }
+    catch (error) {
+      toast.error(error.message);
+      console.error(error);
+    }
+  }
+  
 
   useEffect(() => {
     if (dToken) {
@@ -66,7 +100,7 @@ const DoctorProfile = () => {
           </div>
 
           <div className='flex gap-1 pt-2'>
-            <input
+            <input onChange={()=> isEdit && setProfileData(prev => ({ ...prev, available: !prev.available }))}
               id="available-checkbox"
               checked={profileData.available}
               type="checkbox"
@@ -75,7 +109,16 @@ const DoctorProfile = () => {
             <label htmlFor="available-checkbox">Available for appointments</label>
           </div>
 
-          <button onClick={() => setIsEdit(true)} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all'>Edit</button>
+          {
+            isEdit
+              ?
+              <button onClick={updateProfileData} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all'>Save</button>
+              :
+              <button onClick={() => setIsEdit(true)} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all'>Edit</button>
+          }
+
+          
+          
 
         </div>
       </div>
