@@ -28,6 +28,7 @@ const AppContextProvider = (props) => {
 
     const loadUserProfileData = async () => {
         try {
+            console.log('Token before sending:', token); 
             const { data } = await axios.get(backendUrl + '/api/user/get-profile', { headers:{ Authorization: `Bearer ${token}` }})
             
             if (data.success) {

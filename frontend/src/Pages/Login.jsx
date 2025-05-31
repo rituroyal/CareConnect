@@ -233,16 +233,17 @@ import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin, googleLogout, useGoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
-  const { backendUrl, token, setToken } = useContext(AppContext);
+  const { backendUrl, token, setToken ,loadUserProfileData } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [state, setState] = useState('Sign Up');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
 
   const clearForm = () => {
     setEmail('');
@@ -252,8 +253,7 @@ const Login = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-
-    if (loading) return; // prevent double submission
+    if (loading) return;
 
     setLoading(true);
     try {
@@ -266,7 +266,7 @@ const Login = () => {
 
         if (data.success) {
           toast.success('Account created successfully! Logging you in...');
-          setToken(data.token);  // Automatically log in user after signup
+          setToken(data.token);
           clearForm();
         } else {
           toast.error(data.message);
@@ -292,8 +292,58 @@ const Login = () => {
     }
   };
 
+  
+
+  //Google login handler
+  // const handleGoogleLogin = useGoogleLogin({
+  //   onSuccess: async (tokenResponse) => {
+  //     try {
+  //       const { data } = await axios.post(`${backendUrl}/api/user/google-login`, {
+  //         code: tokenResponse.code,
+  //       });
+
+  //       localStorage.setItem('token', data.token);
+  //       setToken(data.token);
+  //       await loadUserProfileData();
+  //       setState('Login');
+  //       toast.success('Logged in with Google successfully!');
+        
+  //     } catch (err) {
+  //       console.log(err);
+  //       toast.error('Google login failed');
+  //     }
+  //   },
+  //   flow: 'auth-code',
+  // });
+  const handleGoogleLogin = useGoogleLogin({
+  onSuccess: async (tokenResponse) => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/user/google-login`, {
+        code: tokenResponse.code,
+      });
+      console.log("Google login backend response:", data);
+
+      if (data.success && data.token) {
+        localStorage.setItem('token', data.token);
+        setToken(data.token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+        await loadUserProfileData();
+        setState('Login');
+        toast.success('Logged in with Google successfully!');
+      } else {
+        toast.error(data.message || 'Google login failed');
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error('Google login failed');
+    }
+  },
+  flow: 'auth-code',
+});
+
   useEffect(() => {
     if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       navigate('/');
     }
   }, [token]);
@@ -369,6 +419,22 @@ const Login = () => {
           ) : null}
           {state === 'Sign Up' ? 'Create Account' : 'Login'}
         </button>
+
+        {state === 'Login' && (
+  <>
+    <div className="w-full text-center my-3 text-sm text-zinc-500">OR</div>
+
+    <button
+      type="button"
+      onClick={() => handleGoogleLogin()}
+      className="bg-white text-black w-full py-2 border border-zinc-300 rounded-md text-base flex justify-center items-center gap-2 hover:shadow"
+    >
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="w-5 h-5" />
+      Continue with Google
+    </button>
+  </>
+)}
+
         {state === 'Sign Up' ? (
           <p>
             Already have an account?

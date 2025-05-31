@@ -12,11 +12,14 @@ import Navbar from './components/Navbar';
 import MyAppointments from './Pages/MyAppointments'
 import Appointment from './Pages/Appointment';
 import Footer from './components/Footer';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
+
+const GOOGLE_CLIENT_ID="49690093929-ljb1k826u6qc9hal5h06rnn8o8646pqd.apps.googleusercontent.com"
 
 const App = () => {
   return (
-    
+        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <div className='mx-4 sm:mx-[10%]'>
        <ToastContainer position="top-right" autoClose={3000} />
       <Navbar />
@@ -33,6 +36,7 @@ const App = () => {
       </Routes>
       <Footer />
     </div>
+    </GoogleOAuthProvider>
   );
 }
 

@@ -1,5 +1,6 @@
 import validator from 'validator'
 import bcrypt from 'bcrypt'
+import axios from 'axios'
 import userModel from '../models/userModel.js'
 import appointmentModel from '../models/AppointmentModel.js'
 import jwt from 'jsonwebtoken'
@@ -246,6 +247,64 @@ const bookAppointment = async (req, res) => {
     }
 }
 
+const googleLogin = async (req, res) => {
+  const { code } = req.body;
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const redirectUri = 'postmessage'; // for @react-oauth/google
+
+  if (!code) return res.status(400).json({ success: false, message: 'Authorization code is required' });
+
+  if (!process.env.JWT_SECRET) {
+    console.error('JWT_SECRET is not set in environment variables');
+    return res.status(500).json({ success: false, message: 'Server configuration error' });
+  }
+
+  try {
+    // 1. Exchange code for tokens
+    const { data: tokenData } = await axios.post('https://oauth2.googleapis.com/token', {
+      code,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    });
+
+    const { access_token } = tokenData;
+     if (!access_token) return res.json({ success: false, message: 'Google token exchange failed' });
+
+    // 2. Fetch user info
+    const { data: userInfo } = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
+    const { email, name, picture } = userInfo;
+
+    // 3. Check or create user
+    let user = await userModel.findOne({ email });
+    if (!user) {
+      user = await userModel.create({
+        name: name || 'Google User',
+        email,
+        image: picture,
+        password: null,
+        authProvider: 'google',
+      });
+    }
+
+
+    // 4. Generate app token
+    const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET)
+
+    console.log('JWT Token:', token); // Debug log
+
+    res.status(200).json({ success: true, token });
+  } catch (err) {
+    console.error('Google Auth Error:', err.response?.data || err.message);
+    res.status(500).json({ success: false, message: 'Google authentication failed' });
+  }
+};
+
 // const razorpayInstance=new razorpay({
 //     key_id:'process.env.RAZORPAY_KEY_ID',
 //     key_secret:'process.env.RAZORPAY_KEY_SECRET'
@@ -335,4 +394,4 @@ const verifyRazorpay = async (req, res) => {
     }
 }
 
-export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment,listAppointment,cancelAppointment, paymentRazorpay,verifyRazorpay }
+export { registerUser, loginUser, getProfile, updateProfile ,bookAppointment,listAppointment,cancelAppointment, paymentRazorpay,verifyRazorpay,googleLogin }
