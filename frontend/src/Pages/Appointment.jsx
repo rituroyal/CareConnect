@@ -40,15 +40,7 @@ const Appointment = () => {
       endTime.setDate(today.getDate() + i)
       endTime.setHours(21, 0, 0, 0)
       
-      // setting hours
-      // if (today.getDate() === currentDate.getDate()) {
-      //   currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10)
-      //   currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 :0)
-      // }
-      // else {
-      //   currentDate.setHours(10)
-      //   currentDate.setMinutes(0)
-      // }
+      
 
       if (today.getDate() === currentDate.getDate()) {
   // It's today → start from 1 hour later
@@ -187,7 +179,8 @@ const Appointment = () => {
         </div>
         <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Book an appointment</button>
       </div>
-
+          
+     
       {/* Listing Related Doctors */}
       <RelatedDoctors docId={docId} speciality={docInfo.speciality} />
     </div>

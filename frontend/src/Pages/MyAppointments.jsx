@@ -6,10 +6,32 @@ import {useNavigate} from 'react-router-dom'
 
 // import { assets } from '../assets/images/assets'
 const MyAppointments = () => {
-
   const { backendUrl, token, getDoctorsData } = useContext(AppContext)
-
   const [appointments, setAppointments] = useState([])
+  
+  const isChatAllowed = (item) => {
+    if (item.cancelled ) return false;
+    if (!item.slotDate || !item.slotTime) return false;
+  
+    
+    const [day, month, year] = item.slotDate.split('_').map(Number);
+  
+    
+    let [time, modifier] = item.slotTime.split(' ');
+    let [hour, minute] = time.split(':').map(Number);
+    if (modifier && modifier.toLowerCase() === 'pm' && hour < 12) hour += 12;
+    if (modifier && modifier.toLowerCase() === 'am' && hour === 12) hour = 0;
+  
+    const appointmentDate = new Date(year, month - 1, day, hour, minute);
+  
+    const now = new Date();
+    const diffMs = now - appointmentDate;
+    const diffHours = diffMs / 36e5;
+  
+    
+    return diffHours >= 0 && diffHours <= 48;
+  };
+  
   const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
   const slotDateFormat = (slotDate) => {
@@ -135,19 +157,20 @@ const MyAppointments = () => {
             <div></div>
             <div className='flex flex-col gap-2 justify-end'>
              
-              {/* {!item.cancelled  && <button onClick={()=>appointmentRazorpay(item._id)}  className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover-bg-primary hover:text-white transition-all duration-300'>Pay Online</button>}
-              {!item.cancelled && <button onClick={()=>cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'>Cancel appointments</button>}
-              {item.cancelled  && <button className='sm:min-w-48 py-2 border border-red-500 rounded text-red-500'>Appointment Cancelled</button>} */}
-
-{item.isCompleted ? (
-    <button className='sm:min-w-48 py-2 border border-green-500 rounded text-green-500 bg-white cursor-default'>
-      Appointment Completed
+              {item.isCompleted && (
+      <button className='sm:min-w-48 py-2 border border-green-500 rounded text-green-500 bg-white cursor-default'>
+        Appointment Completed
+      </button>
+    )}
+    <button
+      disabled={!isChatAllowed(item)}
+      onClick={() => navigate(`/chat/${item._id}/patient`)}
+      className={`bg-blue-500 text-white px-4 py-2 rounded mt-2 ${!isChatAllowed(item) ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
+      Chat with Doctor
     </button>
-  ) : item.cancelled ? (
-    <button className='sm:min-w-48 py-2 border border-red-500 rounded text-red-500'>
-      Appointment Cancelled
-    </button>
-  ) : (
+    {!item.isCompleted && (
+              
     <>
       <button
         onClick={() => appointmentRazorpay(item._id)}
@@ -160,7 +183,8 @@ const MyAppointments = () => {
         className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'
       >
         Cancel appointments
-      </button>
+                      </button>
+                     
                 </>
               )}
             </div>
@@ -175,133 +199,3 @@ export default MyAppointments
 
 
 
-// import React, { useContext, useEffect, useState } from 'react';
-// import { AppContext } from '../context/AppContext';
-// import axios from 'axios';
-// import { toast } from 'react-toastify';
-// import { useNavigate } from 'react-router-dom';
-
-// const MyAppointments = () => {
-//   const { backendUrl, token } = useContext(AppContext);
-//   const [appointments, setAppointments] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const navigate = useNavigate();
-
-//   // Fetch appointments on mount
-//   const fetchAppointments = async () => {
-//     try {
-//       setLoading(true);
-//       const { data } = await axios.get(`${backendUrl}/api/user/my-appointments`, {
-//         headers: { Authorization: `Bearer ${token}` }
-//       });
-
-//       if (data.success) {
-//         setAppointments(data.appointments);
-//       } else {
-//         toast.error(data.message || 'Failed to fetch appointments');
-//       }
-//     } catch (error) {
-//       toast.error('Error fetching appointments');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchAppointments();
-//   }, []);
-
-//   const cancelAppointment = async (id) => {
-//     try {
-//       const { data } = await axios.post(`${backendUrl}/api/user/cancel-appointment`, { appointmentId: id }, {
-//         headers: { Authorization: `Bearer ${token}` }
-//       });
-//       if (data.success) {
-//         toast.success('Appointment cancelled');
-//         fetchAppointments(); // Refresh list
-//       } else {
-//         toast.error(data.message);
-//       }
-//     } catch (err) {
-//       toast.error('Failed to cancel appointment');
-//     }
-//   };
-
-//   // const appointmentRazorpay = async (appointmentId) => {
-//   //   try {
-//   //     const { data } = await axios.post(
-//   //       `${backendUrl}/api/user/payment-razorpay`,
-//   //       { appointmentId },
-//   //       { headers: { token } }
-//   //     );
-
-//   //     if (data.success) {
-//   //       // Razorpay payment window logic here
-//   //       toast.success('Payment initiated (add Razorpay integration)');
-//   //     } else {
-//   //       toast.error(data.message);
-//   //     }
-//   //   } catch (error) {
-//   //     toast.error('Error during payment');
-//   //   }
-//   // };
-
-//   if (loading) return <p className="mt-12">Loading appointments...</p>;
-
-//   return (
-//     <div>
-//       <p className="pb-3 mt-12 font-medium text-zinc-700 border-b">My Appointments</p>
-//       <div>
-//         {appointments.length === 0 ? (
-//           <p className="mt-6 text-zinc-500">No appointments found.</p>
-//         ) : (
-//           appointments.map((item, index) => (
-//             <div
-//               className="grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b"
-//               key={index}
-//             >
-//               <div>
-//                 <img
-//                   className="w-32 bg-indigo-50"
-//                   src={item.doctorDetails?.image || '/default-doctor.png'}
-//                   alt=""
-//                 />
-//               </div>
-//               <div className="flex-1 text-sm text-zinc-600">
-//                 <p className="text-neutral-800 font-semibold">
-//                   {item.doctorDetails?.name}
-//                 </p>
-//                 <p>{item.doctorDetails?.speciality}</p>
-//                 <p className="text-zinc-700 font-medium mt-1">Address:</p>
-//                 <p className="text-xs">{item.doctorDetails?.address?.line1}</p>
-//                 <p className="text-xs">{item.doctorDetails?.address?.line2}</p>
-//                 <p className="text-xs mt-1">
-//                   <span className="text-sm text-neutral-700 font-medium">
-//                     Date & Time:
-//                   </span>{' '}
-//                   {item.date}, {item.time}
-//                 </p>
-//               </div>
-//               <div className="flex flex-col gap-2 justify-end">
-//                 <button
-//                   onClick={() => appointmentRazorpay(item._id)}
-//                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300"
-//                 >
-//                   Pay Online
-//                 </button>
-//                 <button
-//                   onClick={() => cancelAppointment(item._id)}
-//                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
-//                 >
-//                   Cancel Appointment
-//                 </button>
-//               </div>
-//             </div>
-//           ))
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MyAppointments;

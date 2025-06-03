@@ -16,7 +16,7 @@ import DoctorDashboard from './pages/Doctor/DoctorDashboard';
 import DoctorAppointment from './pages/Doctor/DoctorAppointment';
 import DoctorProfile from './pages/Doctor/DoctorProfile';
 import { Navigate } from 'react-router-dom';
-
+import ChatPage from '../../frontend/src/Pages/ChatPage'; 
 
 
 const App = () => {
@@ -53,6 +53,8 @@ const App = () => {
     dToken ? <Navigate to="/doctor-dashboard" /> :
     <Login />
   } />
+          
+          <Route path='/chat/:roomId/:sender' element={<ChatPage />} />
         </Routes>
       </div>
     </div>

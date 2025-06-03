@@ -15,6 +15,9 @@ import Footer from './components/Footer';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
+import ChatPage from './Pages/ChatPage';
+
+
 const GOOGLE_CLIENT_ID="49690093929-ljb1k826u6qc9hal5h06rnn8o8646pqd.apps.googleusercontent.com"
 
 const App = () => {
@@ -32,7 +35,12 @@ const App = () => {
         <Route path='/contact' element={<Contact/>}/>
         <Route path='/my-profile' element={<MyProfile/>}/>
         <Route path='/my-appointments' element={<MyAppointments/>}/>
-        <Route path='/appointment/:docId' element={<Appointment/>}/>
+          <Route path='/appointment/:docId' element={<Appointment />} />
+          <Route path='/chat' element={<ChatPage />} />
+          {/* <Route path='/chat/:roomId' element={<ChatPage />} /> */}
+          <Route path='/chat/:roomId/:sender' element={<ChatPage />} />
+         
+          
       </Routes>
       <Footer />
     </div>

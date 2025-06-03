@@ -138,6 +138,7 @@ const doctorDashboard = async (req,res) => {
         })
 
         const dashData = {
+            docId,
             earnings,
             appointments: appointments.length,
             patients: patients.length,
