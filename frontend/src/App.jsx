@@ -11,6 +11,8 @@ import MyProfile from './Pages/MyProfile'
 import Navbar from './components/Navbar';
 import MyAppointments from './Pages/MyAppointments'
 import Appointment from './Pages/Appointment';
+import DiseasePredictor from './components/DiseasePredictor';
+
 import Footer from './components/Footer';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -33,6 +35,7 @@ const App = () => {
         <Route path='/login' element={<Login />}/>
         <Route path='/about' element={<About/>}/>
         <Route path='/contact' element={<Contact/>}/>
+        <Route path='/predictor' element={<DiseasePredictor/>}/>
         <Route path='/my-profile' element={<MyProfile/>}/>
         <Route path='/my-appointments' element={<MyAppointments/>}/>
           <Route path='/appointment/:docId' element={<Appointment />} />
