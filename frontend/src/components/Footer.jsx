@@ -8,7 +8,7 @@ const Footer = () => {
               {/*left- Section  */}
               <div>
                   <img className='mb-5 w-40' src={assets.logo} alt="" />
-                  <p className='w-full md:w-2/3 text-gary-600 leading-6'>MediSync is a healthcare app that connects patients with top doctors for hassle-free appointment booking. It offers a seamless experience to browse specialties, check doctor availability, and schedule consultations, ensuring efficient and accessible healthcare services.</p>
+                  <p className='w-full md:w-2/3 text-gray-600 leading-6'>CareConnect is a healthcare app that connects patients with top doctors for hassle-free appointment booking. It offers a seamless experience to browse specialties, check doctor availability, and schedule consultations, ensuring efficient and accessible healthcare services.</p>
               </div>
 
               {/*Center- Section  */}
@@ -35,7 +35,7 @@ const Footer = () => {
           {/* Copyright Text */}
           <div>
               <hr />
-              <p className='py-5 text-sm text-center'>Copyright 2024@ Prescripto - All Right Reserved.</p>
+              <p className='py-5 text-sm text-center'>Copyright 2024@ CareConnect - All Right Reserved.</p>
           </div>
     </div>
   )

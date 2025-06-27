@@ -287,7 +287,6 @@ const googleLogin = async (req, res) => {
         name: name || 'Google User',
         email,
         image: picture,
-        password: null,
         authProvider: 'google',
       });
     }
