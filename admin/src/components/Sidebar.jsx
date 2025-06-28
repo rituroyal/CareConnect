@@ -1,62 +1,60 @@
-import React, { useContext } from 'react';
-import { AdminContext } from '../context/AdminContext';
+import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { assets } from '../assets/assets';
+import { AdminContext } from '../context/AdminContext';
 import { DoctorContext } from '../context/DoctorContext';
-
+import { assets } from '../assets/assets';
 
 const Sidebar = () => {
   const { aToken } = useContext(AdminContext);
   const { dToken } = useContext(DoctorContext);
+
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className='min-h-screen bg-white border-r'>
-      {
-        aToken && <ul className='text-[#515151] mt-5'>
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/admin-dashboard'}>
-            <img src={assets.home_icon} alt="" />
-            <p className='hidden md:block'>Dashboard</p>
-          </NavLink>
+    <div>
+      {/* Mobile Header */}
+      <div className='md:hidden p-4 flex justify-between items-center border-b bg-white'>
+        <button onClick={() => setIsOpen(!isOpen)} className="text-2xl font-bold">
+          &#9776;
+        </button>
 
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/all-appointments'}>
-            <img src={assets.appointment_icon} alt="" />
-            <p className='hidden md:block'>Appointments</p>
-          </NavLink>
+      </div>
 
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/add-doctor'}>
-            <img src={assets.add_icon} alt="" />
-            <p className='hidden md:block'>Add Doctor</p>
-          </NavLink>
+      {/* Sidebar Menu */}
+      <div className={`bg-white border-r md:min-h-screen ${isOpen ? 'block' : 'hidden'} md:block`}>
+        {aToken && (
+          <ul className='text-[#515151] mt-5'>
+            <SidebarLink to="/admin-dashboard" icon={assets.home_icon} label="Dashboard" />
+            <SidebarLink to="/all-appointments" icon={assets.appointment_icon} label="Appointments" />
+            <SidebarLink to="/add-doctor" icon={assets.add_icon} label="Add Doctor" />
+            <SidebarLink to="/doctor-list" icon={assets.people_icon} label="Doctors List" />
+          </ul>
+        )}
 
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/doctor-list'}>
-            <img src={assets.people_icon} alt="" />
-            <p className='hidden md:block'>Doctors List</p>
-          </NavLink>
-        </ul>
-      }
-
-{
-        dToken && <ul className='text-[#515151] mt-5'>
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/doctor-dashboard'}>
-            <img src={assets.home_icon} alt="" />
-            <p className='hidden md:block'>Dashboard</p>
-          </NavLink>
-
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/doctor-appointments'}>
-            <img src={assets.appointment_icon} alt="" />
-            <p className='hidden md:block'>Appointments</p>
-          </NavLink>
-
-          <NavLink className={({isActive})=>`flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary' : ''}`} to={'/doctor-profile'}>
-            <img src={assets.people_icon} alt="" />
-            <p className='hidden md:block'>Profile</p>
-          </NavLink>
-        </ul>
-      }
-
+        {dToken && (
+          <ul className='text-[#515151] mt-5'>
+            <SidebarLink to="/doctor-dashboard" icon={assets.home_icon} label="Dashboard" />
+            <SidebarLink to="/doctor-appointments" icon={assets.appointment_icon} label="Appointments" />
+            <SidebarLink to="/doctor-profile" icon={assets.people_icon} label="Profile" />
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
 
 export default Sidebar;
 
-
+// SidebarLink subcomponent (can be placed above or below Sidebar)
+const SidebarLink = ({ to, icon, label }) => (
+  <NavLink
+    to={to}
+    className={({ isActive }) =>
+      `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer transition ${isActive ? 'bg-[#F2F3FF] border-r-4 border-primary font-medium' : ''
+      }`
+    }
+  >
+    <img src={icon} alt={label} className='w-5 h-5' />
+    <p className='hidden md:block'>{label}</p>
+  </NavLink>
+);
