@@ -48,7 +48,20 @@ const AllAppointments = () => {
             </div>
 
             {/* Age */}
-            <p className='hidden sm:block'>{calculateAge(item.userData.dob)}</p>
+            {/* {console.log('DOB:', item.userData.dob)}
+            <p className='hidden sm:block'>{calculateAge(item.userData.dob)}</p> */}
+
+
+{/* Age */}
+<p className='hidden sm:block'>
+  {item.userData.dob &&
+   item.userData.dob !== "Not Selected" &&
+   item.userData.dob !== "" &&
+   !isNaN(calculateAge(item.userData.dob))
+    ? calculateAge(item.userData.dob)
+    : "N/A"}
+</p>
+
 
             {/* Date & Time */}
             <p className='w-full sm:w-auto'>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
