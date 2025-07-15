@@ -150,7 +150,7 @@ const Appointment = () => {
         <p className='flex items-center gap-1 text-sm font-medium text-gray-900 mt-3'>About <img src={assets.info_icon} /></p>
         <p className='text-sm text-gray-500 max-w-[700px] mt-1'>{docInfo.about}</p>
         </div>
-        <p className='text-gray-500 font-medium mt-4'>Appointment fee: <span className='text-gray-600'>{currencySymbol || '$'}{docInfo.fees}</span></p>
+        <p className='text-gray-500 font-medium mt-4'>Appointment fee: <span className='text-gray-600'> {`₹${Number(docInfo.fees).toLocaleString('en-IN')}`}</span></p>
       </div>
 
       {/* Booking Slots */}

@@ -10,7 +10,21 @@ const Footer = () => {
 
         {/* Left Section */}
         <div>
-          <img className="mb-5 w-36 sm:w-40" src={assets.logo} alt="CareConnect Logo" />
+          {/* Updated logo section to match Navbar */}
+          <div className="flex items-center gap-2 mb-5">
+            <img
+              src="https://i.pinimg.com/736x/25/dc/47/25dc4724f96ecead1872f71ec2b4c57d.jpg"
+              alt="CareConnect Logo"
+              className="w-12 h-12 object-contain"
+              style={{ borderRadius: "10px" }}
+            />
+           <span className="font-bold text-2xl tracking-wide">
+  <span className="text-blue-600">Care</span>
+  <span className="text-blue-600">Connect</span>
+</span>
+
+          </div>
+
           <p className="text-gray-600 leading-6 max-w-full md:max-w-[80%]">
             CareConnect is a healthcare app that connects patients with top doctors for hassle-free appointment booking. It offers a seamless experience to browse specialties, check doctor availability, and schedule consultations, ensuring efficient and accessible healthcare services.
           </p>

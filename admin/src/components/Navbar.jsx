@@ -26,12 +26,20 @@ const Navbar = () => {
       <div className="flex flex-wrap justify-between items-center gap-2">
         
         {/* Left Section: Logo and Role Tag */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <img
-            className="w-32 sm:w-40 cursor-pointer"
-            src={assets.admin_logo}
-            alt="logo"
-          />
+        <div className="flex items-center gap-1 flex-wrap">
+        <img
+    src="https://i.pinimg.com/736x/25/dc/47/25dc4724f96ecead1872f71ec2b4c57d.jpg"
+    alt="CareConnect Logo"
+    className="w-14 h-14 object-contain"
+    style={{ borderRadius: "10px" }}
+  />
+  
+          
+          <span className="font-bold text-2xl tracking-wide">
+  <span className="text-blue-600">Care</span>
+  <span className="text-blue-600">Connect</span>
+</span>
+
           <span className="text-xs px-2.5 py-0.5 border rounded-full border-gray-500 text-gray-600 whitespace-nowrap">
             {aToken ? 'Admin' : 'Doctor'}
           </span>
