@@ -29,7 +29,8 @@ const MyAppointments = () => {
     const diffHours = diffMs / 36e5;
   
     
-    return diffHours >= 0 && diffHours <= 48;
+    // return diffHours >= 0 && diffHours <= 48;
+    return diffHours <= 48;
   };
   
   const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]

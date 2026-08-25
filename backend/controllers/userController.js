@@ -16,7 +16,13 @@ const registerUser = async (req, res) => {
         if (!name || !password || !email) {
             return res.json({ success: false, message: "Missing Details" })
         }
-
+        //validating name format
+        if (!/^[A-Za-z ]+$/.test(name) || name.length < 2 || name.length > 50) {
+            return res.json({
+                success: false,
+                message: "Enter a valid name"
+            });
+        }
         // validating email format
         if (!validator.isEmail(email)) {
             return res.json({ success: false, message: "enter a valid email" })
@@ -39,7 +45,12 @@ const registerUser = async (req, res) => {
 
         const newUser = new userModel(userData)
         const user = await newUser.save()
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+        // const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
         res.json({ success: true, token })
 
     }
@@ -153,24 +164,32 @@ const listAppointment = async (req, res) => {
   };
   
 
+
+//new
 const cancelAppointment = async (req, res) => {
     try {
         const { appointmentId } = req.body
         const {userId} = req.user
 
         const appointmentData = await appointmentModel.findById(appointmentId)
-      
+
         //verify appointment user
         if (appointmentData.userId.toString() !== userId) {
             return res.json({ success: false, message: "Unauthorized action" })
         }
 
-        if (appointmentData.userId !== userId) {
-            return res.json({ success: false, message: "Unauthorized to cancel this appointment" })
+      
+
+        if (appointmentData.isCompleted) {
+            return res.json({ success: false, message: "Cannot cancel a completed appointment" })
+        }
+
+        if (appointmentData.cancelled) {
+            return res.json({ success: false, message: "Appointment is already cancelled" })
         }
 
         await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true})
-        
+
         //releasing doctors slot
         const {docId,slotDate,slotTime}=appointmentData
 
@@ -178,7 +197,7 @@ const cancelAppointment = async (req, res) => {
         let slots_booked=doctorData.slots_booked
 
         slots_booked[slotDate]=slots_booked[slotDate].filter(e=> e!==slotTime)
-        
+
         await doctorModel.findByIdAndUpdate(docId,{slots_booked})
 
         res.json({ success: true, message: "Appointment cancelled successfully" })
@@ -304,39 +323,7 @@ const googleLogin = async (req, res) => {
   }
 };
 
-// const razorpayInstance=new razorpay({
-//     key_id:'process.env.RAZORPAY_KEY_ID',
-//     key_secret:'process.env.RAZORPAY_KEY_SECRET'
-// })
 
-// //api to make payment of appointment using razor pay
-// const paymentRazorpay=async(req,res)=>{
-
-//     try{
-//         const{appointmentId}= req.body
-//     const appointmentData= await appointmentModel.findById(appointmentId)
-
-//     if(!appointmentData || appointmentData.cancelled){
-//         return res.json({success:false,message:"Appointment cancelled or not found"})
-//     }
-
-//     //creating optioms for razor pay payment
-//     const options={
-//         amount:appointmentData.amount * 100,
-//         currency:process.env.CURRENCY,
-//         receipt:appointmentId,
-//     }
-
-//     //creation of order
-//     const order=await razorpayInstance.orders.create(options)
-//     res.json({success:true,order})
-
-//     }catch(error){
-//         console.log(error)
-//         res.json({success:false,message:error.message})
-//     }
-
-//}
 
 const razorpayInstance = new razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -377,8 +364,13 @@ const verifyRazorpay = async (req, res) => {
         console.log(orderInfo)
         if(orderInfo.status === 'paid') {
             // Payment is successful, you can proceed with your logic
+            // await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
+            //     payment:true
+            // })
+
+            //new
             await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
-                payment:true
+            isPaid:true
             })
             res.json({ success: true, message: "Payment successful" })  
         }   else {
