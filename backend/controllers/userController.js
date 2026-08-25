@@ -8,8 +8,9 @@ import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
 import razorpay from 'razorpay'
 import mongoose from 'mongoose'
-// API to register user
+import crypto from 'crypto'
 
+// API to register user
 const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body
@@ -72,7 +73,11 @@ const loginUser = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password)
 
         if (isMatch) {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+            const token = jwt.sign(
+                { id: user._id }, 
+                process.env.JWT_SECRET,
+                { expiresIn: "7d" }
+            )
             res.json({ success: true, token })
         }
         else {
@@ -376,8 +381,18 @@ const paymentRazorpay = async (req, res) => {
         const { appointmentId } = req.body
     const appointmentData = await appointmentModel.findById(appointmentId)
     if (!appointmentData || appointmentData.cancelled) {
-        return res.json({ success: false, message: "Appointment cancelled or not found" })
-    }
+    return res.json({
+        success: false,
+        message: "Appointment cancelled or not found"
+    })
+}
+
+if (appointmentData.isPaid) {
+    return res.json({
+        success: false,
+        message: "Appointment is already paid"
+    })
+}
 
     //creating options for razor pay payment
     const options = {
@@ -397,32 +412,86 @@ const paymentRazorpay = async (req, res) => {
 }
 
 //API to verify payment of appointment using razorpay
-
 const verifyRazorpay = async (req, res) => {
     try {
-        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body
-        const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
-        console.log(orderInfo)
-        if(orderInfo.status === 'paid') {
-            // Payment is successful, you can proceed with your logic
-            // await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
-            //     payment:true
-            // })
+        const {
+            razorpay_payment_id,
+            razorpay_order_id,
+            razorpay_signature
+        } = req.body
 
-            //new
-            await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
-            isPaid:true
+        const userId = req.user.userId
+
+        // 1. Verify Razorpay signature
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+            .digest('hex')
+
+        if (expectedSignature !== razorpay_signature) {
+            return res.json({
+                success: false,
+                message: 'Payment verification failed'
             })
-            res.json({ success: true, message: "Payment successful" })  
-        }   else {
-            return res.json({ success: false, message: "Payment not successful" })
         }
-        // Here you would typically verify the payment signature with Razorpay's API
-        // For simplicity, we are just returning the payment details
-        // res.json({ success: true, message: "Payment verified", paymentDetails: { razorpay_payment_id, razorpay_order_id, razorpay_signature } })
+
+        // 2. Fetch the Razorpay order
+        const orderInfo = await razorpayInstance.orders.fetch(
+            razorpay_order_id
+        )
+
+        // 3. Check that Razorpay order is actually paid
+        if (orderInfo.status !== 'paid') {
+            return res.json({
+                success: false,
+                message: 'Payment not successful'
+            })
+        }
+
+        // 4. Get appointment using Razorpay receipt
+        const appointmentData = await appointmentModel.findById(
+            orderInfo.receipt
+        )
+
+        if (!appointmentData) {
+            return res.json({
+                success: false,
+                message: 'Appointment not found'
+            })
+        }
+
+        // 5. Make sure this appointment belongs to the logged-in user
+        if (appointmentData.userId.toString() !== userId.toString()) {
+            return res.json({
+                success: false,
+                message: 'Unauthorized payment verification'
+            })
+        }
+
+        // 6. Prevent unnecessary re-payment
+        if (appointmentData.isPaid) {
+            return res.json({
+                success: false,
+                message: 'Appointment is already paid'
+            })
+        }
+
+        // 7. Mark appointment as paid
+        appointmentData.isPaid = true
+        await appointmentData.save()
+
+        res.json({
+            success: true,
+            message: 'Payment successful'
+        })
+
     } catch (error) {
         console.log(error)
-        res.json({ success: false, message: error.message })
+
+        res.json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
