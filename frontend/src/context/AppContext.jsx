@@ -26,25 +26,32 @@ const AppContextProvider = (props) => {
         }
     }
 
-    const loadUserProfileData = async () => {
-        try {
-            console.log('Token before sending:', token); 
-            const { data } = await axios.get(backendUrl + '/api/user/get-profile', { headers:{ Authorization: `Bearer ${token}` }})
-            
-            if (data.success) {
-                setUserData(data.userData)
+    const loadUserProfileData = async (authToken = token) => {
+    try {
+        console.log('Token before sending:', authToken);
+
+        const { data } = await axios.get(
+            backendUrl + '/api/user/get-profile',
+            {
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
             }
-            else {
-                toast.error(data.message)
-                setUserData(null);
-            }
-        }
-        catch (error) {
-             console.log(error)
-            toast.error(error.message)
+        );
+
+        if (data.success) {
+            setUserData(data.userData);
+        } else {
+            toast.error(data.message);
             setUserData(null);
         }
+
+    } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+        setUserData(null);
     }
+}
 
     const value = {
         doctors,

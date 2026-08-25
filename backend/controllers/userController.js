@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
 import razorpay from 'razorpay'
-//import razorpay from 'razorpay'
+import mongoose from 'mongoose'
 // API to register user
 
 const registerUser = async (req, res) => {
@@ -208,61 +208,102 @@ const cancelAppointment = async (req, res) => {
 }
 
 
-//api to book appointment
 const bookAppointment = async (req, res) => {
+    const session = await mongoose.startSession()
+
     try {
-        const {  docId, slotDate, slotTime } = req.body
-        const userId = req.user.userId; // <-- from auth middleware
+        const { docId, slotDate, slotTime } = req.body
+        const userId = req.user.userId
 
-        const docData = await doctorModel.findById(docId).select('-password')
+        let appointment
 
-        if (!docData.available) {
-            return res.json({ success: false, message: 'Doctor not available' })
-        }
+        await session.withTransaction(async () => {
 
-        let slots_booked = docData.slots_booked
+            // 1. Atomically reserve the requested slot
+            const docData = await doctorModel.findOneAndUpdate(
+                {
+                    _id: docId,
+                    available: true,
 
-        //checking for slot availability
-        // checking for slot availability
-        if (slots_booked[slotDate]) {
-            if (slots_booked[slotDate].includes(slotTime)) {
-                return res.json({ success: false, message: 'Slot not available' })
-            } else {
-                slots_booked[slotDate].push(slotTime)
+                    // Slot must NOT already exist
+                    [`slots_booked.${slotDate}`]: {
+                        $ne: slotTime
+                    }
+                },
+                {
+                    // Add slot only when the condition above passes
+                    $addToSet: {
+                        [`slots_booked.${slotDate}`]: slotTime
+                    }
+                },
+                {
+                    new: true,
+                    session
+                }
+            ).select('-password')
+
+            // No doctor means the condition failed
+            if (!docData) {
+                throw new Error(
+                    'Doctor not available or slot already booked'
+                )
             }
-        } else {
-            slots_booked[slotDate] = []
-            slots_booked[slotDate].push(slotTime)
-        }
 
-        const userData = await userModel.findById(userId).select('-password')
+            // 2. Get user information
+            const userData = await userModel
+                .findById(userId)
+                .select('-password')
+                .session(session)
 
-        delete docData.slots_booked
+            if (!userData) {
+                throw new Error('User not found')
+            }
 
-        const appointmentData = {
-            userId,
-            docId,
-            userData,
-            docData,
-            amount: docData.fees,
-            slotTime,
-            slotDate,
-            date: Date.now()
-        }
+            // 3. Create a snapshot of doctor data
+            const doctorSnapshot = docData.toObject()
 
-        const newAppointment = new appointmentModel(appointmentData)
-        await newAppointment.save()
+            // We don't need booked slots inside appointment snapshot
+            delete doctorSnapshot.slots_booked
 
-        //save new slots data in docData
-        await doctorModel.findByIdAndUpdate(docId,{slots_booked})
+            // 4. Prepare appointment data
+            const appointmentData = {
+                userId,
+                docId,
+                userData,
+                docData: doctorSnapshot,
+                amount: docData.fees,
+                slotTime,
+                slotDate,
+                date: Date.now()
+            }
 
-        res.json({success:true,message:"Appointment Booked"})
+            // 5. Create appointment
+            const newAppointment =
+                new appointmentModel(appointmentData)
 
+            // Save inside the same transaction
+            appointment =
+                await newAppointment.save({ session })
+        })
 
+        // Transaction committed successfully
+        res.json({
+            success: true,
+            message: 'Appointment Booked',
+            appointment
+        })
 
     } catch (error) {
         console.log(error)
-        res.json({success:false,message:error.message})
+
+        res.json({
+            success: false,
+            message: error.message
+        })
+
+    } finally {
+        // Always close the MongoDB session
+        await session.endSession()
     }
 }
 

@@ -143,30 +143,78 @@ const appointmentComplete = async(req,res) => {
 }
 
 //API to cancel Appointment for doctor panel
-const appointmentCancel = async(req,res) => {
-    try{
-        const docId = req.docId;
-        const { appointmentId } = req.body;
-        const appointmentData = await appointmentModel.findById(appointmentId)
+//fixed - slot release and cancellation logic
+const appointmentCancel = async (req, res) => {
+    try {
+        const docId = req.docId
+        const { appointmentId } = req.body
 
-        if(!appointmentData || appointmentData.docId.toString() !== docId){
-            return res.json({ success: false, message: 'Cancellation Failed' })
+        const appointmentData =
+            await appointmentModel.findById(appointmentId)
+
+        // Check appointment exists and belongs to this doctor
+        if (!appointmentData ||
+            appointmentData.docId.toString() !== docId) {
+            return res.json({
+                success: false,
+                message: 'Cancellation Failed'
+            })
         }
 
-        if(appointmentData.isCompleted){
-            return res.json({ success: false, message: 'Cannot cancel a completed appointment' })
+        // Cannot cancel completed appointment
+        if (appointmentData.isCompleted) {
+            return res.json({
+                success: false,
+                message: 'Cannot cancel a completed appointment'
+            })
         }
 
-        if(appointmentData.cancelled){
-            return res.json({ success: false, message: 'Appointment is already cancelled' })
+        // Already cancelled
+        if (appointmentData.cancelled) {
+            return res.json({
+                success: false,
+                message: 'Appointment is already cancelled'
+            })
         }
 
-        await appointmentModel.findByIdAndUpdate(appointmentId, {cancelled: true})
-        return res.json({ success: true, message: 'Appointment Cancelled' })
+        // 1. Mark appointment as cancelled
+        await appointmentModel.findByIdAndUpdate(
+            appointmentId,
+            { cancelled: true }
+        )
 
-    } catch(error){
+        // 2. Release doctor's booked slot
+        const { slotDate, slotTime } = appointmentData
+
+        const doctorData =
+            await doctorModel.findById(docId)
+
+        let slots_booked = doctorData.slots_booked
+
+        if (slots_booked[slotDate]) {
+            slots_booked[slotDate] =
+                slots_booked[slotDate].filter(
+                    e => e !== slotTime
+                )
+        }
+
+        // 3. Save updated slots
+        await doctorModel.findByIdAndUpdate(
+            docId,
+            { slots_booked }
+        )
+
+        return res.json({
+            success: true,
+            message: 'Appointment Cancelled'
+        })
+
+    } catch (error) {
         console.log(error)
-        res.json({success:false,message:error.message})
+        res.json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
@@ -174,7 +222,6 @@ const appointmentCancel = async(req,res) => {
 // const doctorDashboard = async (req,res) => {
 //     try{
 //         const docId = req.docId // Use the docId from the request object set by authDoctor middleware
-
 //         const appointments = await appointmentModel.find({docId})
 
 //         let earnings = 0
