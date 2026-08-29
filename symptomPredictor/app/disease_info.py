@@ -1,242 +1,281 @@
 disease_info = {
     "flu": {
-        "description": "A common viral infection causing fever, cough, sore throat, and fatigue.",
-        "causes": "Influenza viruses spread by droplets.",
-        "emergency": "No, usually self-limiting.",
-        "cure": "No specific cure; symptoms managed with rest and fluids."
+        "description": "A common viral infection that can cause fever, cough, sore throat, and fatigue.",
+        "causes": "Influenza viruses spread mainly through respiratory droplets.",
+        "emergency": "Usually no, but severe cases can require medical attention.",
+        "cure": "Usually managed with rest, fluids, and symptom treatment; antiviral medicines may be used in some cases."
     },
+
     "migraine": {
-        "description": "Neurological condition with severe headaches, nausea, and light sensitivity.",
-        "causes": "Genetics, stress, certain foods, hormonal changes.",
-        "emergency": "Usually no, but seek care if headaches are sudden and severe.",
-        "cure": "No cure, but symptoms are manageable."
+        "description": "A neurological condition that can cause severe headache, nausea, and sensitivity to light.",
+        "causes": "Genetics, stress, hormonal changes, sleep changes, and certain foods or triggers.",
+        "emergency": "Usually no, but a sudden severe headache or neurological symptoms require urgent evaluation.",
+        "cure": "There is no permanent cure, but attacks can be managed with medicines and lifestyle changes."
     },
+
     "dengue": {
-        "description": "Mosquito-borne viral disease causing high fever, rash, and joint pain.",
-        "causes": "Aedes mosquito bites.",
-        "emergency": "Yes, severe dengue can be life-threatening.",
-        "cure": "No specific cure; supportive care required."
+        "description": "A mosquito-borne viral infection that commonly causes fever, headache, rash, and joint or muscle pain.",
+        "causes": "Dengue virus transmitted mainly by infected Aedes mosquitoes.",
+        "emergency": "Yes, severe dengue can be life-threatening and requires medical care.",
+        "cure": "There is no specific antiviral cure; treatment focuses on fluids, monitoring, and symptom management."
     },
+
     "pneumonia": {
-        "description": "Infection causing inflammation of the lungs with cough and chest pain.",
-        "causes": "Bacteria, viruses, or fungi.",
-        "emergency": "Can be serious, especially in young/elderly.",
-        "cure": "Treatable with antibiotics or antivirals."
+        "description": "An infection that causes inflammation of the air sacs in one or both lungs.",
+        "causes": "Bacteria, viruses, or fungi can cause pneumonia.",
+        "emergency": "It can be serious, especially in older adults, young children, and people with underlying conditions.",
+        "cure": "Treatment depends on the cause and severity and may include antibiotics, antiviral medicines, rest, and fluids."
     },
+
     "cold": {
-        "description": "Mild viral infection of the upper respiratory tract.",
-        "causes": "Rhinoviruses and others.",
-        "emergency": "No.",
-        "cure": "No cure; symptoms managed with rest."
-    },
-    "diabetes": {
-        "description": "Chronic disease with high blood sugar levels.",
-        "causes": "Type 1: autoimmune; Type 2: lifestyle and genetics.",
-        "emergency": "Chronic condition; emergencies possible (hypoglycemia).",
-        "cure": "No cure, manageable with medication and lifestyle."
-    },
-    "food poisoning": {
-        "description": "Illness caused by consuming contaminated food.",
-        "causes": "Bacteria, viruses, toxins in food.",
-        "emergency": "Usually no, but severe dehydration can be dangerous.",
-        "cure": "Most recover with hydration and rest."
-    },
-    "allergy": {
-        "description": "Immune system reaction to harmless substances.",
-        "causes": "Pollen, dust, food, insect stings.",
-        "emergency": "Severe cases can cause anaphylaxis (emergency).",
-        "cure": "No cure; avoid triggers and manage symptoms."
-    },
-    "cholera": {
-        "description": "Bacterial infection causing severe diarrhea and dehydration.",
-        "causes": "Contaminated water or food.",
-        "emergency": "Yes, dehydration can be fatal without treatment.",
-        "cure": "Treatable with rehydration and antibiotics."
-    },
-    "tuberculosis": {
-        "description": "Bacterial infection primarily affecting lungs.",
-        "causes": "Mycobacterium tuberculosis bacteria.",
-        "emergency": "Yes, if untreated it can be fatal.",
-        "cure": "Curable with long-term antibiotics."
-    },
-    "hepatitis": {
-        "description": "Inflammation of the liver caused by viruses.",
-        "causes": "Hepatitis viruses A, B, C, etc.",
-        "emergency": "Can be serious; some forms chronic.",
-        "cure": "Some types curable; others managed with treatment."
-    },
-    "arthritis": {
-        "description": "Inflammation of joints causing pain and stiffness.",
-        "causes": "Autoimmune, wear and tear, infections.",
-        "emergency": "No.",
-        "cure": "No cure; symptoms manageable."
-    },
-    "meningitis": {
-        "description": "Inflammation of membranes around brain and spinal cord.",
-        "causes": "Viruses, bacteria, fungi.",
-        "emergency": "Yes, medical emergency.",
-        "cure": "Treatable with antibiotics or antivirals."
-    },
-    "hypertension": {
-        "description": "High blood pressure often without symptoms.",
-        "causes": "Genetics, lifestyle, kidney disease.",
-        "emergency": "Long-term risk for heart attack, stroke.",
-        "cure": "No cure; controllable with medication."
-    },
-    "gastritis": {
-        "description": "Inflammation of stomach lining.",
-        "causes": "Infections, medications, alcohol.",
-        "emergency": "Rarely an emergency.",
-        "cure": "Usually treatable with medication."
-    },
-    "anemia": {
-        "description": "Lack of healthy red blood cells.",
-        "causes": "Iron deficiency, chronic diseases.",
-        "emergency": "Can cause serious complications if severe.",
-        "cure": "Treatable with supplements or medication."
-    },
-    "heart attack": {
-        "description": "Blocked blood flow to heart muscle.",
-        "causes": "Coronary artery disease.",
-        "emergency": "Yes, immediate medical attention needed.",
-        "cure": "No cure; treatable and manageable."
-    },
-    "stroke": {
-        "description": "Interruption of blood supply to the brain.",
-        "causes": "Blocked or burst blood vessels.",
-        "emergency": "Yes, urgent care required.",
-        "cure": "No cure; recovery depends on treatment speed."
-    },
-    "hypothyroidism": {
-        "description": "Underactive thyroid gland.",
-        "causes": "Autoimmune, iodine deficiency.",
-        "emergency": "No.",
-        "cure": "Manageable with hormone replacement."
-    },
-    "hyperthyroidism": {
-        "description": "Overactive thyroid gland.",
-        "causes": "Autoimmune diseases.",
-        "emergency": "Sometimes, if untreated.",
-        "cure": "Treatable with medication or surgery."
-    },
-    "multiple sclerosis": {
-        "description": "Autoimmune disease affecting nerves.",
-        "causes": "Unknown; autoimmune reaction.",
-        "emergency": "No.",
-        "cure": "No cure; symptoms manageable."
-    },
-    "alzheimer's": {
-        "description": "Progressive brain disorder causing memory loss.",
-        "causes": "Unknown; related to aging.",
-        "emergency": "No.",
-        "cure": "No cure; treatments improve symptoms."
-    },
-    "lung cancer": {
-        "description": "Malignant tumor in lungs.",
-        "causes": "Smoking, pollution, genetics.",
-        "emergency": "Potentially life-threatening.",
-        "cure": "Depends on stage; early detection improves outcome."
-    },
-    "ovarian cancer": {
-        "description": "Cancer of the ovaries.",
-        "causes": "Genetics, age, lifestyle.",
-        "emergency": "Potentially life-threatening.",
-        "cure": "Depends on stage and treatment."
-    },
-    "osteoporosis": {
-        "description": "Weakening of bones.",
-        "causes": "Age, hormone changes, lack of calcium.",
-        "emergency": "No immediate emergency.",
-        "cure": "No cure; manageable with medication."
-    },
-    "liver disease": {
-        "description": "Any condition impairing liver function.",
-        "causes": "Alcohol, viruses, genetics.",
-        "emergency": "Depends on type and severity.",
-        "cure": "Varies; some are treatable."
-    },
-    "glaucoma": {
-        "description": "Eye disease damaging optic nerve.",
-        "causes": "Increased eye pressure.",
-        "emergency": "Can cause blindness if untreated.",
-        "cure": "No cure; manageable with treatment."
-    },
-    "conjunctivitis": {
-        "description": "Inflammation of eye conjunctiva.",
-        "causes": "Infections, allergies.",
+        "description": "A mild viral infection affecting the upper respiratory tract.",
+        "causes": "Several viruses, especially rhinoviruses.",
         "emergency": "Usually no.",
-        "cure": "Treatable with medication."
+        "cure": "There is no specific cure; rest, fluids, and symptom management are usually sufficient."
     },
+
+    "diabetes": {
+        "description": "A chronic condition in which blood glucose levels become too high.",
+        "causes": "Type 1 diabetes is mainly autoimmune, while type 2 diabetes involves insulin resistance, genetics, and lifestyle factors.",
+        "emergency": "Usually a chronic condition, but very high or low blood sugar can become an emergency.",
+        "cure": "There is currently no general cure, but diabetes can often be effectively managed with medication, diet, exercise, and monitoring."
+    },
+
+    "food poisoning": {
+        "description": "An illness caused by consuming contaminated food or drinks.",
+        "causes": "Bacteria, viruses, parasites, or toxins in contaminated food or water.",
+        "emergency": "Usually no, but severe dehydration or complications can be dangerous.",
+        "cure": "Most cases improve with fluids, rest, and supportive care; some infections require specific treatment."
+    },
+
+    "allergy": {
+        "description": "An immune-system reaction to a substance that is normally harmless.",
+        "causes": "Common triggers include pollen, dust, foods, medicines, and insect stings.",
+        "emergency": "Usually no, but severe allergic reactions can cause anaphylaxis and require emergency care.",
+        "cure": "There is no universal cure; avoiding triggers and managing symptoms can help."
+    },
+
+    "cholera": {
+        "description": "A bacterial infection that can cause severe watery diarrhea and rapid dehydration.",
+        "causes": "Usually caused by consuming food or water contaminated with Vibrio cholerae.",
+        "emergency": "Yes, severe dehydration can become life-threatening without treatment.",
+        "cure": "Rapid rehydration is essential; antibiotics may be used in some cases."
+    },
+
+    "tuberculosis": {
+        "description": "A bacterial infection that most commonly affects the lungs.",
+        "causes": "Mycobacterium tuberculosis bacteria, usually spread through the air.",
+        "emergency": "It can become serious or life-threatening if untreated.",
+        "cure": "Usually curable with an appropriate combination of antibiotics taken for the prescribed duration."
+    },
+
+    "hepatitis": {
+        "description": "Inflammation of the liver that can have infectious or other causes.",
+        "causes": "Different hepatitis viruses and other conditions can cause liver inflammation.",
+        "emergency": "Depends on the type and severity.",
+        "cure": "Treatment varies by type; some forms can be cured while others can be controlled with treatment."
+    },
+
+    "arthritis": {
+        "description": "A group of conditions that cause joint pain, stiffness, swelling, or reduced movement.",
+        "causes": "Autoimmune conditions, joint wear and tear, infections, and other factors.",
+        "emergency": "Usually no, although severe or sudden joint symptoms may require medical evaluation.",
+        "cure": "Many types cannot be permanently cured but can be managed with medicines, exercise, and other treatments."
+    },
+
+    "meningitis": {
+        "description": "Inflammation of the protective membranes surrounding the brain and spinal cord.",
+        "causes": "Viruses, bacteria, fungi, and other causes.",
+        "emergency": "Yes, meningitis can be a medical emergency and requires prompt evaluation.",
+        "cure": "Treatment depends on the cause and may include antibiotics, antivirals, or other medicines."
+    },
+
+    "hypertension": {
+        "description": "A condition in which blood pressure remains higher than recommended levels.",
+        "causes": "Genetics, age, lifestyle factors, kidney disease, and other medical conditions.",
+        "emergency": "Usually not an immediate emergency, but very high blood pressure with symptoms can require urgent care.",
+        "cure": "Usually controlled rather than permanently cured through medicines and lifestyle changes."
+    },
+
+    "gastritis": {
+        "description": "Inflammation or irritation of the stomach lining.",
+        "causes": "Infections, certain medicines, alcohol, and other factors.",
+        "emergency": "Usually no, but severe pain or gastrointestinal bleeding requires medical attention.",
+        "cure": "Often treatable by addressing the underlying cause and using appropriate medicines."
+    },
+
+    "anemia": {
+        "description": "A condition in which the blood does not have enough healthy red blood cells or hemoglobin.",
+        "causes": "Iron deficiency, vitamin deficiencies, blood loss, chronic diseases, and other conditions.",
+        "emergency": "Usually not, but severe anemia can cause serious complications.",
+        "cure": "Treatment depends on the cause and may include iron, vitamins, medicines, or treatment of the underlying condition."
+    },
+
+    "heart attack": {
+        "description": "A medical emergency in which blood flow to part of the heart muscle is blocked.",
+        "causes": "Usually caused by blockage of a coronary artery, often related to coronary artery disease.",
+        "emergency": "Yes, immediate emergency medical attention is required.",
+        "cure": "It requires urgent medical treatment; long-term medicines and lifestyle changes help prevent further problems."
+    },
+
+    "stroke": {
+        "description": "A medical condition caused by interruption of blood flow to part of the brain or bleeding in the brain.",
+        "causes": "Blocked blood vessels or bleeding from a ruptured blood vessel.",
+        "emergency": "Yes, stroke requires immediate emergency medical attention.",
+        "cure": "Treatment depends on the type of stroke, and rapid treatment can reduce brain damage."
+    },
+
+    "hypothyroidism": {
+        "description": "A condition in which the thyroid gland does not produce enough thyroid hormone.",
+        "causes": "Autoimmune disease, thyroid damage, certain treatments, and other causes.",
+        "emergency": "Usually no, but severe untreated cases can become serious.",
+        "cure": "Usually managed effectively with thyroid hormone replacement."
+    },
+
+    "hyperthyroidism": {
+        "description": "A condition in which the thyroid gland produces too much thyroid hormone.",
+        "causes": "Autoimmune disease such as Graves' disease, thyroid inflammation, or other thyroid disorders.",
+        "emergency": "Usually no, but severe untreated cases can become an emergency.",
+        "cure": "Treatable with medicines, radioactive iodine, or surgery depending on the cause."
+    },
+
+    "multiple sclerosis": {
+        "description": "A disease in which the immune system damages the protective covering of nerves in the central nervous system.",
+        "causes": "The exact cause is unknown and involves immune, genetic, and environmental factors.",
+        "emergency": "Usually no, but new or severe neurological symptoms require medical evaluation.",
+        "cure": "There is currently no cure, but treatments can reduce relapses and slow disease progression."
+    },
+
+    "alzheimer's": {
+        "description": "A progressive brain disorder that causes worsening memory and thinking problems.",
+        "causes": "The exact cause is complex and involves age, genetics, and changes in the brain.",
+        "emergency": "Usually no, but sudden confusion requires urgent medical evaluation.",
+        "cure": "There is currently no cure, but treatment can help manage symptoms."
+    },
+
+    "lung cancer": {
+        "description": "Cancer that begins in the tissues of the lungs.",
+        "causes": "Smoking is a major risk factor; exposure to certain pollutants and genetic factors can also contribute.",
+        "emergency": "Potentially life-threatening and requires medical evaluation.",
+        "cure": "Treatment depends on the type and stage and may include surgery, chemotherapy, radiation, targeted therapy, or immunotherapy."
+    },
+
+    "ovarian cancer": {
+        "description": "Cancer that begins in or around the ovaries.",
+        "causes": "Risk factors include age, family history, inherited genetic changes, and other factors.",
+        "emergency": "Potentially serious and requires medical evaluation.",
+        "cure": "Treatment depends on the type and stage and may include surgery and medicines such as chemotherapy."
+    },
+
+    "osteoporosis": {
+        "description": "A condition that weakens bones and increases the risk of fractures.",
+        "causes": "Age, hormonal changes, low calcium or vitamin D, certain medicines, and other factors.",
+        "emergency": "Usually no immediate emergency, but fractures require medical care.",
+        "cure": "There is no complete cure, but medicines, exercise, nutrition, and fall prevention can reduce fracture risk."
+    },
+
+    "liver disease": {
+        "description": "A broad term for conditions that damage or impair the function of the liver.",
+        "causes": "Infections, alcohol, metabolic conditions, genetics, medicines, and other factors.",
+        "emergency": "Depends on the type and severity.",
+        "cure": "Treatment varies according to the underlying cause; some liver diseases are treatable or curable."
+    },
+
+    "glaucoma": {
+        "description": "A group of eye conditions that can damage the optic nerve and cause vision loss.",
+        "causes": "Often associated with increased pressure inside the eye, although other factors can contribute.",
+        "emergency": "Some forms can be an emergency, especially when eye pain and sudden vision changes occur.",
+        "cure": "There is no general cure, but treatment can slow or prevent further vision loss."
+    },
+
+    "conjunctivitis": {
+        "description": "Inflammation of the conjunctiva, the thin membrane covering part of the eye.",
+        "causes": "Viruses, bacteria, allergies, and other irritants.",
+        "emergency": "Usually no, but severe eye pain or vision changes require medical attention.",
+        "cure": "Treatment depends on the cause; many cases resolve with supportive care."
+    },
+
     "ear infection": {
-        "description": "Infection in the ear canal or middle ear.",
-        "causes": "Bacteria or viruses.",
-        "emergency": "Rarely an emergency.",
-        "cure": "Treatable with antibiotics or self-limiting."
+        "description": "An infection or inflammation affecting parts of the ear.",
+        "causes": "Bacteria, viruses, or other factors depending on the type of infection.",
+        "emergency": "Usually no, but severe symptoms or complications require medical evaluation.",
+        "cure": "Treatment depends on the type and cause and may include pain relief or antibiotics."
     },
+
     "allergic rhinitis": {
-        "description": "Allergic reaction causing sneezing and runny nose.",
-        "causes": "Allergens like pollen, dust.",
-        "emergency": "No.",
-        "cure": "No cure; symptoms manageable."
+        "description": "An allergic condition that causes sneezing, runny nose, congestion, and other nasal symptoms.",
+        "causes": "Allergens such as pollen, dust mites, mold, or animal dander.",
+        "emergency": "Usually no.",
+        "cure": "There is no permanent cure, but avoiding triggers and using appropriate medicines can control symptoms."
     },
+
     "malaria": {
-        "description": "Mosquito-borne parasitic infection.",
-        "causes": "Plasmodium parasites.",
-        "emergency": "Yes, can be fatal without treatment.",
-        "cure": "Curable with antimalarial drugs."
+        "description": "A potentially serious infectious disease caused by parasites transmitted by infected mosquitoes.",
+        "causes": "Plasmodium parasites transmitted mainly through infected Anopheles mosquito bites.",
+        "emergency": "Yes, malaria can become severe or fatal without prompt treatment.",
+        "cure": "Curable with appropriate antimalarial medicines."
     },
+
     "lung TB": {
-        "description": "Tuberculosis infection in lungs.",
-        "causes": "Mycobacterium tuberculosis.",
-        "emergency": "Yes, serious if untreated.",
-        "cure": "Curable with antibiotics."
+        "description": "Tuberculosis infection affecting the lungs.",
+        "causes": "Mycobacterium tuberculosis bacteria spread through the air.",
+        "emergency": "It can become serious if untreated.",
+        "cure": "Usually curable with the correct combination of antibiotics taken for the prescribed duration."
     },
+
     "throat cancer": {
-        "description": "Cancer in the throat.",
-        "causes": "Smoking, alcohol, HPV infection.",
-        "emergency": "Potentially serious.",
-        "cure": "Depends on stage and treatment."
+        "description": "Cancer that develops in tissues of the throat or nearby structures.",
+        "causes": "Smoking, alcohol use, HPV infection, and other risk factors.",
+        "emergency": "Potentially serious and requires medical evaluation.",
+        "cure": "Treatment depends on the type and stage and may include surgery, radiation, chemotherapy, or other treatments."
     },
+
     "UTI": {
-        "description": "Infection of the urinary tract.",
-        "causes": "Bacterial infection.",
-        "emergency": "Usually no, but can spread if untreated.",
-        "cure": "Treatable with antibiotics."
+        "description": "An infection affecting part of the urinary tract.",
+        "causes": "Usually caused by bacteria entering and multiplying in the urinary tract.",
+        "emergency": "Usually no, but untreated infections can spread to the kidneys and become serious.",
+        "cure": "Usually treatable with appropriate antibiotics when caused by bacteria."
     },
+
     "type 2 diabetes": {
-        "description": "Chronic condition with insulin resistance.",
-        "causes": "Lifestyle, genetics.",
-        "emergency": "Chronic; emergencies possible.",
-        "cure": "No cure; manageable."
+        "description": "A chronic condition in which the body does not use insulin effectively, leading to high blood sugar.",
+        "causes": "Genetics, insulin resistance, excess body weight, physical inactivity, and other factors.",
+        "emergency": "Usually chronic, but very high or low blood sugar can become an emergency.",
+        "cure": "There is no general cure, but it can often be managed with lifestyle changes, medicines, and blood glucose monitoring."
     },
+
     "hypoglycemia": {
-        "description": "Low blood sugar levels.",
-        "causes": "Too much insulin, missed meals.",
-        "emergency": "Yes, if severe.",
-        "cure": "Manageable by adjusting food and medication."
+        "description": "A condition in which blood glucose levels become too low.",
+        "causes": "Too much diabetes medication or insulin, missed meals, alcohol, or other factors.",
+        "emergency": "Severe hypoglycemia can be a medical emergency.",
+        "cure": "Treatment involves promptly raising blood glucose and addressing the underlying cause."
     },
+
     "type 1 diabetes": {
-        "description": "Autoimmune destruction of insulin-producing cells.",
-        "causes": "Autoimmune.",
-        "emergency": "Chronic; emergencies possible.",
-        "cure": "No cure; managed with insulin."
+        "description": "A chronic autoimmune condition in which the immune system destroys insulin-producing cells in the pancreas.",
+        "causes": "An autoimmune reaction involving genetic and environmental factors.",
+        "emergency": "Chronic condition; dangerously high or low blood sugar can become an emergency.",
+        "cure": "There is currently no cure; insulin is required for management."
     },
+
     "electrolyte imbalance": {
-        "description": "Abnormal levels of electrolytes in blood.",
-        "causes": "Dehydration, medications.",
-        "emergency": "Can be an emergency depending on severity.",
-        "cure": "Treatable by correcting electrolyte levels."
+        "description": "A condition in which important minerals such as sodium, potassium, or calcium are outside their normal levels.",
+        "causes": "Dehydration, illness, medicines, kidney problems, and other conditions.",
+        "emergency": "It can become an emergency depending on the severity and the electrolyte affected.",
+        "cure": "Treatment involves correcting the electrolyte abnormality and treating its underlying cause."
     },
+
     "ulcerative colitis": {
-        "description": "Chronic inflammation of the colon.",
-        "causes": "Autoimmune.",
-        "emergency": "Can cause severe complications.",
-        "cure": "No cure; symptoms managed with medication."
+        "description": "A chronic inflammatory disease that affects the lining of the colon and rectum.",
+        "causes": "The exact cause is unknown but involves immune-system and genetic factors.",
+        "emergency": "Usually chronic, but severe flare-ups and complications can require urgent care.",
+        "cure": "There is no general cure with medicines, but treatment can control inflammation and symptoms."
     },
+
     "kidney stones": {
-        "description": "Hard deposits in kidneys causing pain.",
-        "causes": "Dehydration, diet.",
-        "emergency": "Can be emergency if causing blockage.",
-        "cure": "Manageable with treatment or surgery."
-    },
+        "description": "Hard mineral deposits that form inside the kidneys and can cause severe pain when passing through the urinary tract.",
+        "causes": "Dehydration, dietary factors, genetics, and certain medical conditions.",
+        "emergency": "Usually no, but blockage, infection, severe pain, or inability to urinate can require urgent care.",
+        "cure": "Many small stones pass naturally; larger stones may require medicines or procedures."
+    }
 }

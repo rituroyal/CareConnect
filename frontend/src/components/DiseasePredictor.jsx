@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const symptomsList = [
   "fever", "cough", "sore throat", "headache", "nausea", "vomiting", "rash", "joint pain",
@@ -17,17 +17,31 @@ const symptomsList = [
 
 const DiseasePredictor = () => {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const [customSymptom, setCustomSymptom] = useState("");
   const [prediction, setPrediction] = useState(null);
 
   const toggleSymptom = (symptom) => {
     setSelectedSymptoms(prev =>
-      prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
+      prev.includes(symptom)
+        ? prev.filter(s => s !== symptom)
+        : [...prev, symptom]
     );
   };
 
   const predictDisease = async () => {
-    if (selectedSymptoms.length === 0) {
-      alert("Please select at least one symptom.");
+    let symptoms = [...selectedSymptoms];
+
+    if (customSymptom.trim()) {
+      const extraSymptoms = customSymptom
+        .split(",")
+        .map(s => s.trim().toLowerCase())
+        .filter(Boolean);
+
+      symptoms = [...symptoms, ...extraSymptoms];
+    }
+
+    if (symptoms.length === 0) {
+      alert("Please select or enter at least one symptom.");
       return;
     }
 
@@ -35,12 +49,14 @@ const DiseasePredictor = () => {
       const response = await fetch("http://127.0.0.1:5000/api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ symptoms: selectedSymptoms })
+        body: JSON.stringify({ symptoms })
       });
 
       const data = await response.json();
+
       setPrediction(data);
       setSelectedSymptoms([]);
+      setCustomSymptom("");
     } catch (error) {
       console.error("Error fetching prediction:", error);
       alert("Failed to contact backend API.");
@@ -50,8 +66,14 @@ const DiseasePredictor = () => {
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">AI-Based Disease Predictor</h2>
-        <label className="block text-gray-700 font-medium mb-2">Select Symptoms:</label>
+
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          AI-Based Disease Predictor
+        </h2>
+
+        <label className="block text-gray-700 font-medium mb-2">
+          Select Symptoms:
+        </label>
 
         <div className="border border-gray-300 rounded-lg p-3 h-52 overflow-y-auto shadow-sm bg-white">
           {symptomsList.map(symptom => (
@@ -63,11 +85,33 @@ const DiseasePredictor = () => {
                 onChange={() => toggleSymptom(symptom)}
                 className="h-5 w-5 text-blue-600"
               />
-              <label htmlFor={symptom} className="ml-2 block text-gray-700 select-none">
+
+              <label
+                htmlFor={symptom}
+                className="ml-2 block text-gray-700 select-none"
+              >
                 {symptom}
               </label>
             </div>
           ))}
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Symptom not listed?
+          </label>
+
+          <input
+            type="text"
+            value={customSymptom}
+            onChange={(e) => setCustomSymptom(e.target.value)}
+            placeholder="Enter symptom(s), separated by commas"
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+
+          <p className="text-sm text-gray-500 mt-1">
+            Example: stomach pain, burning sensation
+          </p>
         </div>
 
         <button
@@ -79,14 +123,34 @@ const DiseasePredictor = () => {
 
         {prediction && (
           <div className="mt-6 p-4 bg-green-50 border border-green-300 rounded-lg text-gray-800 shadow-sm">
-            <h3 className="text-xl font-semibold text-green-700 mb-2">Prediction Result</h3>
-            <p><strong>Disease:</strong> {prediction.predicted_disease}</p>
-            <p><strong>Description:</strong> {prediction.description}</p>
-            <p><strong>Causes:</strong> {prediction.causes}</p>
-            <p><strong>Emergency:</strong> {prediction.emergency}</p>
-            <p><strong>Cure:</strong> {prediction.cure}</p>
+
+            <h3 className="text-xl font-semibold text-green-700 mb-2">
+              Prediction Result
+            </h3>
+
+            <p>
+              <strong>Disease:</strong> {prediction.predicted_disease}
+            </p>
+
+            <p>
+              <strong>Description:</strong> {prediction.description}
+            </p>
+
+            <p>
+              <strong>Causes:</strong> {prediction.causes}
+            </p>
+
+            <p>
+              <strong>Emergency:</strong> {prediction.emergency}
+            </p>
+
+            <p>
+              <strong>Cure:</strong> {prediction.cure}
+            </p>
+
           </div>
         )}
+
       </div>
     </div>
   );
