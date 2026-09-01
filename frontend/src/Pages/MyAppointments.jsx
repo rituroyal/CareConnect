@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 
-// import { assets } from '../assets/images/assets'
 const MyAppointments = () => {
   const { backendUrl, token, getDoctorsData } = useContext(AppContext)
   const [appointments, setAppointments] = useState([])
@@ -73,41 +72,62 @@ const MyAppointments = () => {
     }
   }
 
-  const initPay = (order) => {
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Your Razorpay key
-      amount: order.amount, // Amount in paise
-      currency: order.currency,
-      name: 'CareConnect',
-      description: 'Appointment Payment',
-      order_id: order.id, // Order ID from Razorpay
-      receipt: order.receipt, // Receipt ID
-      handler: async (response) => {
-        console.log(response)
-        try {
-          const { data } = await axios.post(
-            backendUrl + '/api/user/verifyRazorpay',response,{headers: { Authorization: `Bearer ${token}` } } 
-          );
+ const initPay = (order) => {
+  const options = {
+    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+    amount: order.amount,
+    currency: order.currency,
+    name: 'CareConnect',
+    description: 'Appointment Payment',
+    order_id: order.id,
+    receipt: order.receipt,
 
-          if (data.success) {
-            toast.success('Payment successful');
-            getUserAppointments(); // Refresh appointments
-            navigate('/my-appointments')
-          } else {
-            toast.error(data.message);
+    handler: async (response) => {
+      console.log(response);
+
+      try {
+        const { data } = await axios.post(
+          backendUrl + '/api/user/verifyRazorpay',
+          response,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        }
-        catch (error) {
-          console.error('Payment verification failed:', error);
-          toast.error('Payment verification failed');
-        }
-      }
-     
-    }
+        );
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
-  }
+        if (data.success) {
+          toast.success('Payment successful');
+          getUserAppointments();
+          navigate('/my-appointments');
+        } else {
+          toast.error(data.message);
+        }
+      } catch (error) {
+        console.error('Payment verification failed:', error);
+        toast.error('Payment verification failed');
+      }
+    },
+
+    modal: {
+      ondismiss: () => {
+        toast.info('Payment cancelled');
+      }
+    }
+  };
+
+  const rzp = new window.Razorpay(options);
+
+  rzp.on('payment.failed', (response) => {
+    console.error('Payment failed:', response.error);
+    toast.error(
+      response.error?.description || 'Payment failed. Please try again.'
+    );
+  });
+
+  rzp.open();
+};
+
   const appointmentRazorpay = async (appointmentId) => {
     try {
       const { data } = await axios.post(
@@ -117,10 +137,7 @@ const MyAppointments = () => {
       );
 
       if (data.success) {
-        // Initialize Razorpay payment window here
-        // For example, using Razorpay's checkout script
         initPay(data.order);
-        toast.success('Payment initiated (add Razorpay integration)');
       } else {
         toast.error(data.message);
       }
@@ -171,23 +188,31 @@ const MyAppointments = () => {
       Chat with Doctor
     </button>
     {!item.isCompleted && (
-              
-    <>
+  <>
+    {item.isPaid ? (
+      <button
+        className='text-sm text-green-500 text-center sm:min-w-48 py-2 border rounded'
+        disabled
+      >
+        Payment Completed
+      </button>
+    ) : (
       <button
         onClick={() => appointmentRazorpay(item._id)}
         className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-blue-500 hover:text-white transition-all duration-300'
       >
         Pay Online
       </button>
-      <button
-        onClick={() => cancelAppointment(item._id)}
-        className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'
-      >
-        Cancel appointments
-                      </button>
-                     
-                </>
-              )}
+    )}
+
+    <button
+      onClick={() => cancelAppointment(item._id)}
+      className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300'
+    >
+      Cancel appointments
+    </button>
+  </>
+)}
             </div>
             </div>
         ))}

@@ -120,15 +120,12 @@ const Appointment = () => {
 
   useEffect(() => {
     fetchDocInfo(docInfo)
-    console.log(docInfo)
-  })
+  },[doctors,docId])
+
   useEffect(() => {
     getAvailableSlots()
   }, [docInfo])
   
-  useEffect(() => {
-    console.log(docSlots);
-  },[docSlots])
 
   return docInfo &&(
     <div>
