@@ -57,22 +57,19 @@ export default function ChatRoom({ roomId, sender, }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  const sendMessage = (e) => {
-    e.preventDefault()
-    if (!input.trim()) return
+const sendMessage = (e) => {
+  e.preventDefault()
 
-    const optimisticMsg = {
-      sender,
-      message: input,
-      timestamp: new Date().toISOString(),
-      _id: `temp_${Date.now()}` 
-    }
-    setMessages(prev => [...prev, optimisticMsg])
+  if (!input.trim()) return
 
-    socket.emit("chatMessage", { roomId, sender, message: input })
-    setInput("")
-  }
+  socket.emit("chatMessage", {
+    roomId,
+    sender,
+    message: input
+  })
 
+  setInput("")
+}
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
